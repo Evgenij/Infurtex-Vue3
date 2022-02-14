@@ -74,9 +74,9 @@
 // ---
 
 // Background color for `<body>`
-@body-background: #f8fafc;
+@body-background: #F4F7FC;
 // Base background color for most components
-@component-background: @body-background;
+@component-background: #FAFBFD;
 // Popover background color
 @popover-background: @component-background;
 @popover-customize-border-color: @border-color-split;
@@ -103,14 +103,14 @@
 @heading-5-size: ceil(@font-size-base * 1.14);
 // https://github.com/ant-design/ant-design/issues/20210
 @line-height-base: 1.4;
-@border-radius-base: 8px;
+@border-radius-base: 10px;
 @border-radius-sm: 4px;
 
 // vertical paddings
 @padding-lg: 26px; // containers
-@padding-md: 18px; // small containers and buttons
-@padding-sm: 14px; // Form controls and items
-@padding-xs: 10px; // small items
+@padding-md: 22px; // small containers and buttons
+@padding-sm: 18px; // Form controls and items
+@padding-xs: 14px; // small items
 @padding-xss: 8px; // more small
 
 // vertical padding for all form controls
@@ -125,9 +125,9 @@
 @margin-xss: 8px; // more small
 
 // height rules
-@height-base: 38px;
-@height-lg: 42px;
-@height-sm: 34px;
+@height-base: 40px;
+@height-lg: 44px;
+@height-sm: 38px;
 
 // The background colors for active and hover states for things like
 // list items or table cells.
@@ -163,16 +163,16 @@
 @ease-in-out-quint: cubic-bezier(0.86, 0, 0.07, 1);
 
 // Border color
-@border-color-base: hsv(0, 0, 85%); // base border outline a component
+@border-color-base: hsv(0, 0, 90%); // base border outline a component
 @border-color-split: hsv(0, 0, 94%); // split border inside a component
 @border-color-inverse: @white;
-@border-width-base: 1px; // width of the border for a component
+@border-width-base: 2px; // width of the border for a component
 @border-style-base: solid; // style of a components border
 
 // Outline
 @outline-blur-size: 0;
-@outline-width: 2px;
-@outline-color: @primary-color; // No use anymore
+@outline-width: 0px;
+@outline-color: @primary-3; // No use anymore
 @outline-fade: 10%;
 
 @background-color-light: hsv(0, 0, 98%); // background of header and selected item
@@ -185,7 +185,7 @@
 @disabled-color-dark: fade(#fff, 35%);
 
 // Shadow
-@shadow-color: rgba(0, 0, 0, 0.15);
+@shadow-color: rgba(0, 0, 0, 0.1);
 @shadow-color-inverse: @component-background;
 @box-shadow-base: @shadow-2;
 @shadow-1-up: 0 -6px 16px -8px rgba(0, 0, 0, 0.08), 0 -9px 28px 0 rgba(0, 0, 0, 0.05),
@@ -206,7 +206,7 @@
 @btn-border-width: @border-width-base;
 @btn-border-style: @border-style-base;
 @btn-shadow: 0 2px 0 rgba(0, 0, 0, 0.015);
-@btn-primary-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+@btn-primary-shadow: 0 2px 0 rgba(0, 0, 0, 0.01);
 @btn-text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
 
 @btn-primary-color: #fff;
@@ -439,13 +439,13 @@
 @input-icon-color: @input-color;
 @input-border-color: @border-color-base;
 @input-bg: @component-background;
-@input-number-hover-border-color: @input-hover-border-color;
+@input-number-hover-border-color: hsv(0, 0, 85%);
 @input-number-handler-active-bg: #f4f4f4;
 @input-number-handler-hover-bg: @primary-5;
 @input-number-handler-bg: @component-background;
 @input-number-handler-border-color: @border-color-base;
 @input-addon-bg: @background-color-light;
-@input-hover-border-color: @primary-5;
+@input-hover-border-color: hsv(0, 0, 85%);
 @input-disabled-bg: @disabled-bg;
 @input-outline-offset: 0 0;
 @input-icon-hover-color: fade(@black, 85%);
@@ -459,8 +459,8 @@
 // Select
 // ---
 @select-border-color: @border-color-base;
-@select-item-selected-color: @text-color;
-@select-item-selected-font-weight: 600;
+@select-item-selected-color: @primary-5;
+@select-item-selected-font-weight: 500;
 @select-dropdown-bg: @component-background;
 @select-item-selected-bg: @primary-1;
 @select-item-active-bg: @item-hover-bg;

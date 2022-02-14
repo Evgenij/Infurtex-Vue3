@@ -1,126 +1,150 @@
 <template>
     <div class="list-tests">
-        <div class="sticky top-20 content__header flex justify-between items-center p-4 mb-5 bg-white rounded-lg">
-            <a-input v-model:value="searchTest" placeholder="Поиск тестов">
+        <div class="sticky space-x-3 top-20 content__header flex justify-between items-center p-4 mb-5 bg-white rounded-lg">
+            <a-input v-model:value="searchTest" placeholder="Поиск тестов" class="flex items-center">
                 <template #prefix>
                     <i class='bx bx-search-alt'></i>
                 </template>
-                <template #suffix>
-                    <a-tooltip title="Extra information">
-                        <info-circle-outlined style="color: rgba(0, 0, 0, 0.45)" />
-                    </a-tooltip>
-                </template>
             </a-input>
-
-<!--            <vs-select-->
-<!--                placeholder="Все проекты"-->
-<!--                v-model="filterProjectTest"-->
-<!--                class="mr-3"-->
-<!--            >-->
-<!--                <vs-option label="Все проекты" value="all">-->
-<!--                    Все проекты-->
-<!--                </vs-option>-->
-<!--                <template v-for="project in tests" v-if="project.project_name != '' && project.project_name != 'Название проекта'">-->
-<!--                    <vs-option :label="project.project_name" :value="project.project_name">-->
-<!--                        {{project.project_name}}-->
-<!--                    </vs-option>-->
-<!--                </template>-->
-<!--            </vs-select>-->
-<!--            <vs-select-->
-<!--                placeholder="Любой статус"-->
-<!--                v-model="filterStatusTest"-->
-<!--                class="mr-3"-->
-<!--            >-->
-<!--                <vs-option label="Любой статус" value="all">-->
-<!--                    Любой статус-->
-<!--                </vs-option>-->
-<!--                <vs-option label="В разработке" value="0">-->
-<!--                    В разработке-->
-<!--                </vs-option>-->
-<!--                <vs-option label="Настроен" value="1">-->
-<!--                    Настроен-->
-<!--                </vs-option>-->
-<!--                <vs-option label="Запущен" value="2">-->
-<!--                    Запущен-->
-<!--                </vs-option>-->
-<!--                <vs-option label="Завершен" value="3">-->
-<!--                    Завершен-->
-<!--                </vs-option>-->
-<!--                <vs-option label="Остановлен" value="4">-->
-<!--                    Остановлен-->
-<!--                </vs-option>-->
-<!--                <vs-option label="Архивирован" value="5">-->
-<!--                    Архивирован-->
-<!--                </vs-option>-->
-<!--            </vs-select>-->
-<!--            <vs-button class="min-w-max">-->
-<!--                <i class="bx bx-plus text-base mr-1"></i>-->
-<!--                Создать тест-->
-<!--            </vs-button>-->
+            <a-select
+                v-model:value="filterProjectTest"
+                show-search
+                placeholder="Проект"
+                style="width: 100%"
+                :options="projectsOptions"
+                :filter-option="filterOption"
+                @focus="handleFocus"
+                @blur="handleBlur"
+                @change="handleChange"
+            ></a-select>
+            <a-select
+                v-model:value="filterStatusTest"
+                show-search
+                placeholder="Статус теста"
+                style="width: 100%"
+                :options="valuesSelectStatus"
+                :filter-option="filterOption"
+                @focus="handleFocus"
+                @blur="handleBlur"
+                @change="handleChange"
+            ></a-select>
+            <a-button type="primary" class="w-fit" :size="sizeButton">
+                <i class="bx bx-plus text-base left"></i>
+                Создать тест
+            </a-button>
         </div>
-
-<!--        <div ref="content" class="list-tests relative h-full"-->
-<!--            :class="{'content-is-loading': !loadingTests}">-->
-<!--            <div class="wrapp-list" v-if="this.testsList.length > 0">-->
-<!--                <transition-group-->
-<!--                    v-bind:css="false"-->
-<!--                    v-on:before-enter="beforeEnter"-->
-<!--                    v-on:enter="enter"-->
-<!--                    v-on:leave="leave"-->
-<!--                    name="staggered-fade">-->
-<!--                    <block-test v-if="loadingTests" v-for="test in testsList" :key="test.id"-->
-<!--                                :id="test.id"-->
-<!--                                :name="test.name" :status-test="test.status_test"-->
-<!--                                :respondents="test.respondents" :type="test.type"-->
-<!--                                :project-name="test.project_name"-->
-<!--                                :preview="test.preview">-->
-<!--                    </block-test>-->
-<!--                </transition-group>-->
-<!--            </div>-->
-<!--            <div class="empty-tests text-center text-gray-500 h-full py-44" v-else>-->
-<!--                Тестов не найдено... Попробуйте изменить критерий поиска или-->
-<!--                <a href="#" class="link link-blue size-16">создать новый тест</a>-->
-<!--            </div>-->
-<!--        </div>-->
+        <div ref="content" class="list-tests relative h-full">
+            <div v-if="this.testsList.length > 0" class="wrapp-list">
+                <transition-group
+                    v-bind:css="false"
+                    v-on:before-enter="beforeEnter"
+                    v-on:enter="enter"
+                    v-on:leave="leave"
+                    name="staggered-fade">
+                    <block-test v-if="loadingTests" v-for="test in testsList" :key="test.id"
+                                :id="test.id"
+                                :name="test.name" :status-test="test.status_test"
+                                :respondents="test.respondents" :type="test.type"
+                                :project-name="test.project_name"
+                                :preview="test.preview">
+                    </block-test>
+                </transition-group>
+            </div>
+            <div v-else class="empty-tests text-center text-gray-500 h-full py-44">
+                Тестов не найдено... Попробуйте изменить критерий поиска или
+                <a href="#" class="link link-blue size-16">создать новый тест</a>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
     import BlockTest from "./Test";
+    import {ref, computed} from 'vue'
+    import {reactive} from "@vue/reactivity";
 
     export default {
         name: "list-tests",
         components: {BlockTest},
-        data: () => ({
-            searchTest: '',
-            filterProjectTest: "all",
-            filterStatusTest: "all",
-            listTests: '',
-            loadingTests: false,
-        }),
         props: {
             tests: {
                 type: Array,
                 required: true
             }
         },
+        data: () => ({
+            sizeButton: ref('default'),
+            filterProjectTest: ref(''),
+            filterStatusTest: ref('all'),
+            searchTest: '',
+            listTests: '',
+            loadingTests: false,
+            projectsOptions: [
+                { value: 'jack', label: 'Jack' },
+                { value: 'lucy', label: 'Lucy' },
+                { value: 'tom', label: 'Tom' }
+            ]
+        }),
+        setup(){
+            // let projectsOptions = [
+            //     { value: 'jack', label: 'Jack' },
+            //     { value: 'lucy', label: 'Lucy' },
+            //     { value: 'tom', label: 'Tom' }
+            // ]
+            let statusOptions = [
+                { value: 'all', label: 'Любой статус',},
+                { value: 0, label: 'В разработке',},
+                { value: 1, label: 'Настроен',},
+                { value: 2, label: 'Запущен',},
+                { value: 3, label: 'Завершен',},
+                { value: 4, label: 'Остановлен',},
+                { value: 5, label: 'Архивирован',},
+            ]
+            //const valuesSelectProject = ref(projectsOptions);
+            const valuesSelectStatus = ref(statusOptions);
+
+            const handleChange = value => {
+                console.log(`selected ${value}`);
+            };
+
+            const handleBlur = () => {
+                console.log('blur');
+            };
+
+            const handleFocus = () => {
+                console.log('focus');
+            };
+
+            const filterOption = (input, option) => {
+                return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+            };
+
+            return {
+                filterOption,
+                handleBlur,
+                handleFocus,
+                handleChange,
+                //valuesSelectProject,
+                valuesSelectStatus,
+            };
+        },
         methods: {
-            openLoading() {
-                const loading = this.$vs.loading({
-                    target: this.$refs.content,
-                    color: 'primary',
-                    type: 'circles'
-                })
-                setTimeout(() => {
-                    loading.close()
-                    this.loadingTests = true
-                }, 1000)
-            },
+            // openLoading() {
+            //     const loading = this.$vs.loading({
+            //         target: this.$refs.content,
+            //         color: 'primary',
+            //         type: 'circles'
+            //     })
+            //     setTimeout(() => {
+            //         loading.close()
+            //         this.loadingTests = true
+            //     }, 1000)
+            // },
             beforeEnter: function (el) {
                 el.style.opacity = 0
             },
             enter: function (el, done) {
-                var delay = 0
+                let delay = 0
                 setTimeout(function () {
                     Velocity(
                         el,
@@ -130,7 +154,7 @@
                 }, delay)
             },
             leave: function (el, done) {
-                var delay = 0
+                let delay = 0
                 setTimeout(function () {
                     Velocity(
                         el,
@@ -146,7 +170,7 @@
             },
             filterByProject(array) {
                 let query = this.filterProjectTest
-                if (query == "all"){
+                if (query === "all"){
                     return array
                 } else {
                     return array.filter(function (item) {
@@ -156,7 +180,7 @@
             },
             filterByStatus(array) {
                 let query = this.filterStatusTest
-                if (query == "all"){
+                if (query === "all"){
                     return array
                 }else {
                     return array.filter(function(item) {
@@ -171,7 +195,10 @@
             },
         },
         mounted: function () {
-            this.openLoading();
+            this.valuesSelectProject.forEach((item)=>{
+                console.log(item.label)
+            })
+            //this.openLoading();
         },
         computed:{
             testsList(){
@@ -182,6 +209,12 @@
 </script>
 
 <style lang="scss" scoped>
+
+    @import './resources/sass/variables';
+
+    .content__header {
+        @include default-shadow;
+    }
 
     .content-is-loading{
         height: 500px;

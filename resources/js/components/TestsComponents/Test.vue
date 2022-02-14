@@ -1,5 +1,6 @@
 <template>
     <div class="block-test relative z-0 flex rounded-lg bg-white mb-3 transform hover:-translate-y-1 cursor-pointer">
+        <h3>{{name}}</h3>
         <div class="preview-wrapper flex justify-center items-center rounded-lg overflow-hidden relative">
             <vs-tooltip not-arrow right>
                 <div class="type-test px-2 p-1 absolute top-1.5 left-1.5 bg-white rounded-lg">
@@ -207,7 +208,7 @@
                 this.$refs.tooltip.classList.remove('hidden')
             },
             hideTooltipMenu() {
-                if (this.deletingTest != true) {
+                if (this.deletingTest !== true) {
                     this.$refs.tooltip.classList.add('hidden')
                 }
             },
@@ -236,19 +237,19 @@
             },
         },
         mounted: function () {
-            if (this.statusTest == 0) {
+            if (this.statusTest === 0) {
                 this.status.code = 0;
                 this.status.name = "В разработке"
-            } else if (this.statusTest == 1) {
+            } else if (this.statusTest === 1) {
                 this.status.code = 1;
                 this.status.name = "Настроен"
-            } else if (this.statusTest == 2) {
+            } else if (this.statusTest === 2) {
                 this.status.code = 2;
                 this.status.name = "Запущен"
-            } else if (this.statusTest == 3) {
+            } else if (this.statusTest === 3) {
                 this.status.code = 3;
                 this.status.name = "Завершен"
-            } else if (this.statusTest == 4) {
+            } else if (this.statusTest === 4) {
                 this.status.code = 4;
                 this.status.name = "Остановлен"
             } else {
@@ -256,7 +257,7 @@
                 this.status.name = "Архивирован"
             }
 
-            if (this.projectName == "") {
+            if (this.projectName === "") {
                 this.project_name = "Без проекта"
             } else {
                 this.project_name = this.projectName
@@ -264,30 +265,30 @@
         },
         watch: {
             'status.code': function (val) {
-                if (val == 0) {
+                if (val === 0) {
                     this.status.name = "В разработке"
-                } else if (val == 1) {
+                } else if (val === 1) {
                     this.status.name = "Настроен"
-                } else if (val == 2) {
+                } else if (val === 2) {
                     this.status.name = "Запущен"
-                } else if (val == 3) {
+                } else if (val === 3) {
                     this.status.name = "Завершен"
-                } else if (val == 4) {
+                } else if (val === 4) {
                     this.status.name = "Остановлен"
                 } else {
                     this.status.name = "Архивирован"
                 }
             },
             'statusTest': function (val) {
-                if (val == 0) {
+                if (val === 0) {
                     this.status.name = "В разработке"
-                } else if (val == 1) {
+                } else if (val === 1) {
                     this.status.name = "Настроен"
-                } else if (val == 2) {
+                } else if (val === 2) {
                     this.status.name = "Запущен"
-                } else if (val == 3) {
+                } else if (val === 3) {
                     this.status.name = "Завершен"
-                } else if (val == 4) {
+                } else if (val === 4) {
                     this.status.name = "Остановлен"
                 } else {
                     this.status.name = "Архивирован"
